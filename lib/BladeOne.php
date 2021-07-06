@@ -18,7 +18,7 @@
  * @noinspection Php
  */
 
-namespace eftec\bladeone;
+namespace Eftec\Bladeone;
 
 use ArrayAccess;
 use BadMethodCallException;
@@ -26,6 +26,7 @@ use Closure;
 use Countable;
 use Exception;
 use InvalidArgumentException;
+
 
 /**
  * BladeOne - A Blade Template implementation in a single file
@@ -51,10 +52,10 @@ class BladeOne
     /** @var int DEBUG MODE, the file is always compiled and the filename is identifiable. */
     const MODE_DEBUG = 5;
     /** @var array Hold dictionary of translations */
-    public static $dictionary = [];
+    public static array $dictionary;
     /** @var string PHP tag. You could use < ?php or < ? (if shorttag is active in php.ini) */
     public $phpTag = '<?php '; // hello hello hello.
-    public $phpTagEcho = '<?php echo ';
+    public $phpTagEcho = '<?php'.' echo ';
     /** @var string $currentUser Current user. Example: john */
     public $currentUser;
     /** @var string $currentRole Current role. Example: admin */
@@ -133,7 +134,7 @@ class BladeOne
     /** @var array used by $this->composer() */
     protected $composerStack = [];
     /** @var array The stack of in-progress push sections. */
-    protected $pushStack = [];
+    protected array $pushStack = [];
     /** @var array All of the finished, captured push sections. */
     protected $pushes = [];
     /** @var int The number of active rendering operations. */
@@ -2798,7 +2799,7 @@ class BladeOne
             return isset($match[3]) ? $match[0] : $match[0] . $match[2];
         };
         /* return \preg_replace_callback('/\B@(@?\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', $callback, $value); */
-        return preg_replace_callback('/\B@(@?\w+(?:::\w+)?)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', $callback, $value);
+        return preg_replace_callback('/\B@(@?\w+(?:::\w+)?)([ \t]*)(\( ( (?>[^()]+) | (/?3) )* \))?/x', $callback, $value);
     }
 
     /**
@@ -3019,7 +3020,7 @@ class BladeOne
      */
     protected function pipeDream($result)
     {
-        $array = preg_split('~\\\\.(*SKIP)(*FAIL)|\|~s', $result);
+        $array = preg_split('~\\\\.(/*SKIP)(/*FAIL)|\|~s', $result);
         $c = count($array) - 1; // base zero.
         if ($c === 0) {
             return $result;
